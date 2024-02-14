@@ -1682,7 +1682,7 @@ function loadRoot() {
 async function loadDocumentNode(nodeId) {
   var _process$env$FIGMA_TO;
 
-  const response = await fetch(`https://api.figma.com/v1/files/${process.env.DOCUMENT_ID}/nodes?ids=${nodeId}&depth=1000`, {
+  const response = await fetch(`https://api.figma.com/v1/files/${process.env.DOCUMENT_ID}/nodes?ids=${nodeId}&depth=100`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -1781,9 +1781,9 @@ async function parseColors(pageId) {
     return;
   }
 
-  const textNodes = getRecursiveNodes(documentNode.children).filter(item => item.type === 'TEXT');
-  const colors = textNodes.map(node => ({
-    name: node.characters,
+  const rectangleNodes = getRecursiveNodes(documentNode.children).filter(item => item.type === 'RECTANGLE');
+  const colors = rectangleNodes.map(node => ({
+    name: node.name,
     color: node.fills[0].color,
     opacity: node.fills[0].opacity
   }));
@@ -1981,7 +1981,6 @@ async function writeColors(colors, config) {
       theme,
       name
     } = parseColorName(color.name, multipleThemes);
-    console.log(theme, name);
 
     if (themes[theme]) {
       themes[theme].push(_extends({}, color, {
@@ -2018,7 +2017,6 @@ async function writeColors(colors, config) {
     }
   }
 
-  console.log('tailwindColors', tailwindColors);
   saveTailwindColors(`module.exports = ${JSON.stringify(tailwindColors)}`);
 }
 
