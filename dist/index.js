@@ -1665,12 +1665,14 @@ fetch$1.Promise = global.Promise;
 
 let client;
 let documentId;
+let figmaToken;
 
 function initializeLoader(config) {
   client = figmaJs.Client({
     personalAccessToken: config.figmaToken
   });
   documentId = config.projectId;
+  figmaToken = config.figmaToken;
 }
 
 function loadRoot() {
@@ -1680,13 +1682,13 @@ function loadRoot() {
 }
 
 async function loadDocumentNode(nodeId) {
-  var _process$env$FIGMA_TO;
+  var _figmaToken;
 
   const response = await fetch(`https://api.figma.com/v1/files/${process.env.DOCUMENT_ID}/nodes?ids=${nodeId}&depth=100`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'X-FIGMA-TOKEN': (_process$env$FIGMA_TO = process.env.FIGMA_TOKEN) != null ? _process$env$FIGMA_TO : ''
+      'X-FIGMA-TOKEN': (_figmaToken = figmaToken) != null ? _figmaToken : ''
     }
   });
   const result = await response.json();

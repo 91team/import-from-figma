@@ -3,6 +3,7 @@ import { Config } from './config'
 
 let client: ClientInterface
 let documentId: string
+let figmaToken: string
 
 function initializeLoader(config: Config) {
   client = Client({
@@ -10,6 +11,7 @@ function initializeLoader(config: Config) {
   })
 
   documentId = config.projectId
+  figmaToken = config.figmaToken
 }
 
 function loadRoot() {
@@ -25,7 +27,7 @@ async function loadDocumentNode(nodeId: string) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-FIGMA-TOKEN': process.env.FIGMA_TOKEN ?? '',
+        'X-FIGMA-TOKEN': figmaToken ?? '',
       },
     }
   )
