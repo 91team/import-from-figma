@@ -1684,7 +1684,7 @@ function loadRoot() {
 async function loadDocumentNode(nodeId) {
   var _figmaToken;
 
-  const response = await fetch(`https://api.figma.com/v1/files/${process.env.DOCUMENT_ID}/nodes?ids=${nodeId}&depth=100`, {
+  const response = await fetch(`https://api.figma.com/v1/files/${documentId}/nodes?ids=${nodeId}&depth=100`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
