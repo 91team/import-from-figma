@@ -1757,11 +1757,26 @@ async function parseTypography(pageId) {
     return;
   }
 
-  const textNodes = getRecursiveNodes(documentNode.children).filter(item => item.type === 'TEXT');
+  const textNodes = typographyGetRecursiveNodes(documentNode.children, null).filter(item => item.type === 'TEXT');
   return textNodes.map(v => _extends({
     name: v.name
   }, v.style));
 }
+
+const typographyGetRecursiveNodes = (nodes, parent) => {
+  return nodes.reduce((acc, curr) => {
+    if (curr.children) {
+      acc.push(...typographyGetRecursiveNodes(curr.children, curr));
+    } else {
+      // fonts need to be wrapped in frame with name "constants"
+      if ((parent == null ? void 0 : parent.type) === 'FRAME' && parent.name === 'constants') {
+        acc.push(curr);
+      }
+    }
+
+    return acc;
+  }, []);
+};
 
 const getRecursiveNodes = nodes => {
   return nodes.reduce((acc, curr) => {
