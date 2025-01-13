@@ -48,12 +48,32 @@ async function parseTypography(pageId: string): Promise<Typography[] | undefined
     return
   }
 
-  const textNodes = getRecursiveNodes(documentNode.children).filter((item) => item.type === 'TEXT')
+  const textNodes = typographyGetRecursiveNodes(documentNode.children, null).filter(
+    (item) => item.type === 'TEXT'
+  )
 
   return textNodes.map((v) => ({
     name: v.name,
     ...v.style,
   }))
+}
+
+const typographyGetRecursiveNodes = (
+  nodes: NodeWithChildrens[],
+  parent: NodeWithChildrens | null
+): NodeWithChildrens[] => {
+  return nodes.reduce<NodeWithChildrens[]>((acc, curr) => {
+    if (curr.children) {
+      acc.push(...typographyGetRecursiveNodes(curr.children, curr))
+    } else {
+      // fonts need to be wrapped in frame with name "constants"
+      if (parent?.type === 'FRAME' && parent.name === 'constants') {
+        acc.push(curr)
+      }
+    }
+
+    return acc
+  }, [])
 }
 
 const getRecursiveNodes = (nodes: NodeWithChildrens[]): NodeWithChildrens[] => {
